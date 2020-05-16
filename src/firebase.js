@@ -1,3 +1,5 @@
+import * as firebase from "firebase"
+
 const config = {
   apiKey: "AIzaSyCrSKnFDz-bbE4mvLcXY6kMZh120Acmzok",
   authDomain: "battlecreator-82d15.firebaseapp.com",
@@ -9,4 +11,6 @@ const config = {
   measurementId: "G-004XDCDM0F",
 };
 
-export default config;
+firebase.initializeApp(config);
+const firebaseExport = firebase.auth
+export default firebaseExport;

@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Link, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import Home from "./views/Home";
 import Admin from "./views/Admin";
@@ -12,6 +17,7 @@ import config from "./firebase";
 function App(props) {
   const existingTokens = JSON.parse(localStorage.getItem("tokens"));
   const [authTokens, setAuthTokens] = useState(existingTokens);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const setTokens = (data) => {
     localStorage.setItem("tokens", JSON.stringify(data));
@@ -19,7 +25,6 @@ function App(props) {
   };
 
   useEffect(() => {
-    firebase.initializeApp(config);
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         // User is signed in.
@@ -30,6 +35,7 @@ function App(props) {
         console.log(email);
         console.log(uid);
         setTokens("token");
+        setLoggedIn(true);
       } else {
         // User is signed out.
         console.log("Signed Out");
@@ -42,9 +48,14 @@ function App(props) {
       <Router>
         <div>
           <ul>
-            {" "}
             <li>
-              <Link to="/">Home Page</Link>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/signup">Signup</Link>
             </li>
             <li>
               <Link to="/admin">Admin Page</Link>
