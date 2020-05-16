@@ -1,14 +1,37 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import * as serviceWorker from "./serviceWorker";
+import { setContext } from "apollo-link-context";
+import { ApolloClient } from "apollo-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { HttpLink } from "apollo-link-http";
+import { ApolloProvider } from "@apollo/react-hooks";
+import App from "./App";
+
+const link = new HttpLink({
+  uri: "http://localhost:4000/graphiql",
+});
+
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXItMSIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTU4ODM5MTI5OCwiZXhwIjoxNTkwOTgzMjk4fQ.SrCXpEfepO_OY5FLz0MIvu1gxs0Un7E49BewrftKBrY`,
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(link),
+  cache: new InMemoryCache(),
+});
 
 ReactDOM.render(
-  <React.StrictMode>
+  <ApolloProvider client={client}>
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </ApolloProvider>,
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
