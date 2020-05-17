@@ -5,11 +5,15 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+
 import PrivateRoute from "./PrivateRoute";
 import Home from "./views/Home";
-import Admin from "./views/Admin";
+import User from "./views/User";
 import Login from "./views/Login";
 import Signup from "./views/Signup";
+import CardContainer from "./views/CardContainer";
+import CreateMonster from "./views/CreateMonster";
+
 import { AuthContext } from "./context/auth";
 import firebase from "firebase";
 import config from "./firebase";
@@ -43,28 +47,67 @@ function App(props) {
     });
   }, []);
 
+  function logOut() {
+    setAuthTokens();
+    localStorage.removeItem("tokens");
+    Logout();
+  }
+
+  const Logout = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        // Sign-out successful.
+      })
+      .catch(function (error) {
+        // An error happened.
+      });
+  };
+
   return (
     <AuthContext.Provider value={{ authTokens, setAuthTokens: setTokens }}>
       <Router>
         <div>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <Link to="/signup">Signup</Link>
-            </li>
-            <li>
-              <Link to="/admin">Admin Page</Link>
-            </li>
-          </ul>
+          {loggedIn ? (
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/user">User Page</Link>
+              </li>
+              <li>
+                <Link to="/container">Card List</Link>
+              </li>
+              <li>
+                <Link to="/create-monster">Create Monster</Link>
+              </li>
+              <li>
+                <Link
+                  to="/"
+                  onClick={() => {
+                    setLoggedIn(false);
+                    logOut();
+                  }}
+                >
+                  Log Out
+                </Link>
+              </li>
+            </ul>
+          ) : (
+            <ul>
+              <li>
+                <Link to="/login">Log In</Link>
+              </li>
+            </ul>
+          )}
           <Route exact path="/" component={Home} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
-          <PrivateRoute path="/admin" component={Admin} />
+          <PrivateRoute path="/user" component={User} />
+          <PrivateRoute path="/container" component={CardContainer} />
+          <PrivateRoute path="/create-monster" component={CreateMonster} />
         </div>
       </Router>
     </AuthContext.Provider>
