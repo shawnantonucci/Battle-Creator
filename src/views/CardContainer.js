@@ -4,6 +4,14 @@ import firebase from "firebase";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
+import {
+  Card,
+  Logo,
+  Form,
+  Input,
+  Button,
+  Error,
+} from "../components/MonsterForm";
 
 const MONSTERS = gql`
   {
@@ -24,6 +32,7 @@ const GETMONSTERSBYUSER = gql`
     getMonstersByUser(id: $id) {
       id
       name
+      image
       createdBy
     }
   }
@@ -54,7 +63,6 @@ function CardContainer() {
   }, [monstersData]);
 
   const monsterByUser = [].concat.apply([], monsters);
-  console.log("monsterByUser", monsterByUser)
 
   return (
     <div>
@@ -62,9 +70,9 @@ function CardContainer() {
         monsterByUser.map((monster) => {
           return (
             <div>
-              <p>{monster.name}</p>
-              <p>{monster.createdBy}</p>
-              <img style={{ width: 100, height: 100 }} src={monster.image} />
+              <p>Monster: {monster.name}</p>
+              <p>CreatedBy: {monster.createdBy}</p>
+              <Logo src={monster.image} />
             </div>
           );
         })}

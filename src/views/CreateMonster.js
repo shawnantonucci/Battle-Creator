@@ -53,7 +53,6 @@ const ADDMONSTER = gql`
 function CreateMonster() {
   const { data: monstersData } = useQuery(MONSTERS);
   const [monsters, setMonsters] = useState();
-  const [user, setUser] = useState();
   const [name, setName] = useState("");
   const [health, setHealth] = useState(0);
   const [monsterImage, setMonsterImage] = useState();
@@ -64,12 +63,6 @@ function CreateMonster() {
   //   const userUid = firebase.auth().currentUser.uid;
   //   localStorage.setItem("userUid", userUid);
   // }
-
-  useEffect(() => {
-    setUser(localStorage.getItem("userUid"));
-  }, []);
-
-  console.log(user);
 
   useEffect(() => {
     setMonsters(monstersData && Object.values(monstersData.monsters));
@@ -84,7 +77,7 @@ function CreateMonster() {
           name: name,
           health: health,
           image: monsterImage,
-          createdBy: user,
+          createdBy: localStorage.getItem("userUid"),
         },
         refetchQueries: [{ query: MONSTERS }],
       });

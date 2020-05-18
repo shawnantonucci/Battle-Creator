@@ -19,6 +19,11 @@ function Login(props) {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(function () {
+        if (firebase.auth().currentUser) {
+          const userUid = firebase.auth().currentUser.uid;
+          localStorage.setItem("userUid", userUid);
+        }
+        const uuid = localStorage.getItem("userUid");
         setAuth(true);
       })
       .catch(function (error) {
