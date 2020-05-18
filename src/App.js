@@ -32,8 +32,8 @@ function App(props) {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         // User is signed in.
-        var email = user.email;
-        var uid = user.uid;
+        const email = user.email;
+        const uid = user.uid;
 
         console.log("Signed In");
         console.log(email);

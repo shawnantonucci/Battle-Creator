@@ -29,12 +29,23 @@ const MONSTERS = gql`
 `;
 
 const ADDMONSTER = gql`
-  mutation CreateMonster($name: String!, $health: Int!, $image: String!) {
-    createMonster(name: $name, health: $health, image: $image) {
+  mutation CreateMonster(
+    $name: String!
+    $health: Int!
+    $image: String!
+    $createdBy: String!
+  ) {
+    createMonster(
+      name: $name
+      health: $health
+      image: $image
+      createdBy: $createdBy
+    ) {
       id
       name
       health
       image
+      createdBy
     }
   }
 `;
@@ -42,11 +53,23 @@ const ADDMONSTER = gql`
 function CreateMonster() {
   const { data: monstersData } = useQuery(MONSTERS);
   const [monsters, setMonsters] = useState();
+  const [user, setUser] = useState();
   const [name, setName] = useState("");
   const [health, setHealth] = useState(0);
   const [monsterImage, setMonsterImage] = useState();
   const [isError, setIsError] = useState(false);
   const [createMonster] = useMutation(ADDMONSTER);
+
+  // if (firebase.auth().currentUser) {
+  //   const userUid = firebase.auth().currentUser.uid;
+  //   localStorage.setItem("userUid", userUid);
+  // }
+
+  useEffect(() => {
+    setUser(localStorage.getItem("userUid"));
+  }, []);
+
+  console.log(user);
 
   useEffect(() => {
     setMonsters(monstersData && Object.values(monstersData.monsters));
@@ -57,14 +80,19 @@ function CreateMonster() {
       setIsError(true);
     } else {
       createMonster({
-        variables: { name: name, health: health, image: monsterImage },
+        variables: {
+          name: name,
+          health: health,
+          image: monsterImage,
+          createdBy: user,
+        },
         refetchQueries: [{ query: MONSTERS }],
       });
     }
   };
 
   const handleFiles = (files) => {
-    console.log(files.base64);
+    console.log(files);
     setMonsterImage(files.base64);
   };
 
