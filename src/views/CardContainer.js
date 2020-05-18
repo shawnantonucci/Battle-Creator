@@ -19,6 +19,16 @@ const MONSTERS = gql`
   }
 `;
 
+const GETMONSTERSBYUSER = gql`
+  query GetMonsterByUserID($id: String!) {
+    getMonstersByUser(id: $id) {
+      id
+      name
+      createdBy
+    }
+  }
+`;
+
 const ADDMONSTER = gql`
   mutation CreateMonster($name: String!, $health: Int!, $image: String!) {
     createMonster(name: $name, health: $health, image: $image) {
@@ -31,22 +41,29 @@ const ADDMONSTER = gql`
 `;
 
 function CardContainer() {
-  const { data: monstersData } = useQuery(MONSTERS);
-  const [monsters, setMonsters] = useState();
+  const { data: monstersData } = useQuery(GETMONSTERSBYUSER, {
+    variables: { id: localStorage.getItem("userUid") },
+  });
+  // const { data: monstersData } = useQuery(MONSTERS);
+  const [monsters, setMonsters] = useState([]);
 
   const [createMonster] = useMutation(ADDMONSTER);
 
   useEffect(() => {
-    setMonsters(monstersData && Object.values(monstersData.monsters));
+    setMonsters(monstersData && Object.values(monstersData));
   }, [monstersData]);
+
+  const monsterByUser = [].concat.apply([], monsters);
+  console.log("monsterByUser", monsterByUser)
 
   return (
     <div>
-      {monsters &&
-        monsters.map((monster) => {
+      {monsterByUser &&
+        monsterByUser.map((monster) => {
           return (
             <div>
               <p>{monster.name}</p>
+              <p>{monster.createdBy}</p>
               <img style={{ width: 100, height: 100 }} src={monster.image} />
             </div>
           );
