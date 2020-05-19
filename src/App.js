@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Link,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
 import PrivateRoute from "./PrivateRoute";
 import Home from "./views/Home";

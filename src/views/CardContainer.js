@@ -12,6 +12,7 @@ import {
   Button,
   Error,
 } from "../components/MonsterForm";
+import { Avatar } from "antd";
 
 const MONSTERS = gql`
   {
@@ -49,17 +50,18 @@ const ADDMONSTER = gql`
   }
 `;
 
-function CardContainer() {
+function CardContainer(props) {
   const { data: monstersData } = useQuery(GETMONSTERSBYUSER, {
     variables: { id: localStorage.getItem("userUid") },
   });
-  // const { data: monstersData } = useQuery(MONSTERS);
+  console.log("CardContainer -> monstersData", monstersData)
   const [monsters, setMonsters] = useState([]);
-
+  
   const [createMonster] = useMutation(ADDMONSTER);
 
   useEffect(() => {
     setMonsters(monstersData && Object.values(monstersData));
+    console.log("setMonsters", setMonsters)
   }, [monstersData]);
 
   const monsterByUser = [].concat.apply([], monsters);
@@ -72,7 +74,11 @@ function CardContainer() {
             <div>
               <p>Monster: {monster.name}</p>
               <p>CreatedBy: {monster.createdBy}</p>
-              <Logo src={monster.image} />
+              <Avatar
+                shape="square"
+                size="small"
+                icon={<Logo src={monster.image} />}
+              />
             </div>
           );
         })}

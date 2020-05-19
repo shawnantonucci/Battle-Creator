@@ -8,10 +8,9 @@ import firebase from "firebase";
 function Login(props) {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("shawn@gmail.com");
+  const [password, setPassword] = useState("123456");
   const [auth, setAuth] = useState(false);
-
   const referer = "/" || props.location.state.referer;
 
   const Login = () => {

@@ -13,6 +13,8 @@ import {
   Error,
 } from "../components/MonsterForm";
 import ReactFileReader from "react-file-reader";
+import { Spin } from "antd";
+import { Redirect } from "react-router-dom";
 
 const MONSTERS = gql`
   {
@@ -50,13 +52,14 @@ const ADDMONSTER = gql`
   }
 `;
 
-function CreateMonster() {
+function CreateMonster(props) {
   const { data: monstersData } = useQuery(MONSTERS);
   const [monsters, setMonsters] = useState();
   const [name, setName] = useState("");
   const [health, setHealth] = useState(0);
   const [monsterImage, setMonsterImage] = useState();
   const [isError, setIsError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [createMonster] = useMutation(ADDMONSTER);
 
   // if (firebase.auth().currentUser) {
@@ -68,26 +71,37 @@ function CreateMonster() {
     setMonsters(monstersData && Object.values(monstersData.monsters));
   }, [monstersData]);
 
-  const AddCreatedMonster = () => {
+  const AddCreatedMonster = async () => {
+    setLoading(true);
     if (!name || !health) {
       setIsError(true);
     } else {
-      createMonster({
+      await createMonster({
         variables: {
           name: name,
           health: health,
           image: monsterImage,
           createdBy: localStorage.getItem("userUid"),
         },
-        refetchQueries: [{ query: MONSTERS }],
+        // refetchQueries: [{ query: MONSTERS }],
       });
     }
+    setLoading(false);
+    return <Redirect to={"/"} />;
   };
 
   const handleFiles = (files) => {
     console.log(files);
     setMonsterImage(files.base64);
   };
+
+  if (loading) {
+    return (
+      <div className="container">
+        <Spin />
+      </div>
+    );
+  }
 
   return (
     <Card>

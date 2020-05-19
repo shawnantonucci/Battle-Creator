@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import "./antd.css"
+// import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import { setContext } from "apollo-link-context";
 import { ApolloClient } from "apollo-client";
@@ -10,8 +11,8 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import App from "./App";
 
 const link = new HttpLink({
-  // uri: "http://localhost:4000/graphiql",
-  uri: "https://battle-creator.herokuapp.com/",
+  uri: "http://localhost:4000/graphiql",
+  // uri: "https://battle-creator.herokuapp.com/",
 });
 
 const authLink = setContext((_, { headers }) => {
