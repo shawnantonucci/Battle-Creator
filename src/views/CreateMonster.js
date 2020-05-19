@@ -87,7 +87,7 @@ function CreateMonster(props) {
       });
     }
     setLoading(false);
-    return <Redirect to={"/"} />;
+    return props.history.push("/container");
   };
 
   const handleFiles = (files) => {

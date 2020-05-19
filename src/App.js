@@ -102,7 +102,7 @@ function App(props) {
           <Route path="/signup" component={Signup} />
           <PrivateRoute path="/user" component={User} />
           <PrivateRoute path="/container" component={CardContainer} />
-          <PrivateRoute path="/create-monster" component={CreateMonster} />
+          <PrivateRoute path="/create-monster" {...props} component={CreateMonster} />
         </div>
       </Router>
     </AuthContext.Provider>

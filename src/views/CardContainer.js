@@ -51,7 +51,7 @@ const ADDMONSTER = gql`
 `;
 
 function CardContainer(props) {
-  const { data: monstersData } = useQuery(GETMONSTERSBYUSER, {
+  const { data: monstersData, refetch } = useQuery(GETMONSTERSBYUSER, {
     variables: { id: localStorage.getItem("userUid") },
   });
   console.log("CardContainer -> monstersData", monstersData)
@@ -61,6 +61,7 @@ function CardContainer(props) {
 
   useEffect(() => {
     setMonsters(monstersData && Object.values(monstersData));
+    refetch()
     console.log("setMonsters", setMonsters)
   }, [monstersData]);
 
